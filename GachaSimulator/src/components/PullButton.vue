@@ -1,20 +1,6 @@
-<template>
-  <div class="text-center">
-    <button @click="performPull" class="px-4 py-2 bg-indigo-600 text-white rounded">
-      Pull
-    </button>
-    <div v-if="result" class="mt-4">
-      <h2>You pulled: {{ result.name }} ({{ result.rarity }}★)</h2>
-      <img :src="result.image" :alt="result.name" class="w-32 h-32 mx-auto mt-2" />
-    </div>
-  </div>
-</template>
-
 <script setup>
-import { ref } from 'vue'
 import { characterPool } from '../data/characterPool'
-
-const result = ref(null)
+const emit = defineEmits(['pulled'])
 
 function performPull() {
   const roll = Math.random()
@@ -23,15 +9,27 @@ function performPull() {
   for (const character of characterPool) {
     cumulative += character.rate
     if (roll < cumulative) {
-      result.value = character
+      emit('pulled', character)
       break
     }
   }
 }
 </script>
 
+<template>
+  <div>
+    <button @click="performPull">Pull!</button>
+  </div>
+</template>
+
 <style scoped>
-img {
-  border-radius: 8px;
+button {
+  padding: 0.5rem 1.2rem;
+  font-size: 1.2rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 </style>
